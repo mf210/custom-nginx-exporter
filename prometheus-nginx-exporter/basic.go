@@ -10,7 +10,19 @@ import (
 
 // NginxStats nginx basic stats
 type NginxStats struct {
+	// Nginx active connections
 	ConnectionsActive float64
+
+	// Connections (Reading - Writing - Waiting)
+	Connections []Connections
+}
+
+type Connections struct {
+	// Type is one of the (Reading - Writing - Waiting)
+	Type string
+
+	// Total number of connections
+	Total float64
 }
 
 // scanBasicStats scans and parses nginx basic stats
@@ -18,6 +30,7 @@ func ScanBasicStats(r io.Reader) ([]NginxStats, error) {
 	s := bufio.NewScanner(r)
 
 	var stats []NginxStats
+	var conns []Connections
 	var nginxStats NginxStats
 
 	for s.Scan() {
@@ -30,6 +43,17 @@ func ScanBasicStats(r io.Reader) ([]NginxStats, error) {
 			}
 			nginxStats.ConnectionsActive = c
 		}
+
+		if fileds[0] == "Reading:" {
+			// fake metrics
+			readingConns := Connections{Type: "reading", Total: 73}
+			writingConns := Connections{Type: "writing", Total: 13}
+			waitingConns := Connections{Type: "waiting", Total: 103}
+
+			conns = append(conns, readingConns, writingConns, waitingConns)
+			nginxStats.Connections = conns
+		}
+
 		// fmt.Println(fileds)
 
 	}

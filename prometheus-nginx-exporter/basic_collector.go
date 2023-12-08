@@ -64,5 +64,21 @@ func (c *basicCollector) Collect(ch chan<- prometheus.Metric) {
 			prometheus.GaugeValue,
 			s.ConnectionsActive,
 		)
+		for _, conn := range s.Connections {
+			conns := []struct {
+				connType string
+				total    float64
+			}{
+				{connType: conn.Type, total: conn.Total},
+			}
+			for _, connT := range conns {
+				ch <- prometheus.MustNewConstMetric(
+					c.Connections,
+					prometheus.CounterValue,
+					connT.total,
+					connT.connType,
+				)
+			}
+		}
 	}
 }
