@@ -12,7 +12,7 @@ COPY basic_collector.go basic.go ./
 
 RUN go build -o /exporter cmd/exporter/main.go
 
-FROM gcr.io/distroless/base-debian11
+FROM debian:latest
 
 COPY --from=build /exporter /exporter
 
