@@ -11,8 +11,8 @@ import (
 	"strconv"
 	"time"
 
-	exporter "github.com/antonputra/tutorials/lessons/141/prometheus-nginx-exporter"
 	"github.com/hpcloud/tail"
+	exporter "github.com/mf210/custom-nginx-exporter"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
